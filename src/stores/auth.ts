@@ -3,12 +3,19 @@ import { ref, computed } from 'vue'
 
 export const API = 'http://localhost:8081'
 
+function normalizeRole(role?: string): string {
+  if (!role) return ''
+  let value = String(role).trim().toUpperCase()
+  if (value.startsWith('ROLE_')) value = value.slice(5)
+  return value
+}
+
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string>(localStorage.getItem('admin_token') || '')
   const username = ref<string>(localStorage.getItem('admin_user') || '')
-  const role = ref<string>(localStorage.getItem('admin_role') || '')
+  const role = ref<string>(normalizeRole(localStorage.getItem('admin_role') || ''))
 
-  const isLoggedIn = computed(() => !!token.value && role.value === 'ADMIN')
+  const isLoggedIn = computed(() => !!token.value && normalizeRole(role.value) === 'ADMIN')
 
   function authHeaders(): Record<string, string> {
     return token.value ? { Authorization: `Bearer ${token.value}` } : {}
@@ -25,13 +32,14 @@ export const useAuthStore = defineStore('auth', () => {
       throw new Error(err.message || 'Đăng nhập thất bại')
     }
     const data = await res.json()
-    if (data.role !== 'ADMIN') throw new Error('Bạn không có quyền admin')
+    const incomingRole = normalizeRole(data.role)
+    if (incomingRole !== 'ADMIN') throw new Error('Bạn không có quyền admin')
     token.value = data.token
     username.value = data.username
-    role.value = data.role
+    role.value = incomingRole
     localStorage.setItem('admin_token', data.token)
     localStorage.setItem('admin_user', data.username)
-    localStorage.setItem('admin_role', data.role)
+    localStorage.setItem('admin_role', incomingRole)
   }
 
   function logout() {

@@ -79,10 +79,12 @@ html, body, #app { height: 100%; background: var(--bg-base); color: var(--text-p
 }
 
 .sidebar-brand .logo-image {
-  width: 56px;
-  height: 56px;
+  width: 70px;
+  height: 70px;
   object-fit: contain;
   flex-shrink: 0;
+  border-radius: 12px;
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.45)) saturate(1.08);
 }
 
 .sidebar-brand h1 {
@@ -763,8 +765,8 @@ select.form-control {
 }
 
 .login-logo .logo-image {
-  width: 120px;
-  height: 120px;
+  width: 146px;
+  height: 146px;
   object-fit: contain;
   margin: 0 auto 10px;
   filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
