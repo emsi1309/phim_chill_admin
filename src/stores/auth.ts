@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 export const API = 'http://localhost:8081'
+const ADMIN_SESSION_MS = 2 * 60 * 60 * 1000
 
 function normalizeRole(role?: string): string {
   if (!role) return ''
@@ -14,10 +15,22 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref<string>(localStorage.getItem('admin_token') || '')
   const username = ref<string>(localStorage.getItem('admin_user') || '')
   const role = ref<string>(normalizeRole(localStorage.getItem('admin_role') || ''))
+  const loginAt = ref<number>(Number(localStorage.getItem('admin_login_at') || 0))
 
-  const isLoggedIn = computed(() => !!token.value && normalizeRole(role.value) === 'ADMIN')
+  const isSessionExpired = computed(() =>
+    !loginAt.value || Date.now() - loginAt.value > ADMIN_SESSION_MS
+  )
+
+  const isLoggedIn = computed(() =>
+    !!token.value && normalizeRole(role.value) === 'ADMIN' && !isSessionExpired.value
+  )
 
   function authHeaders(): Record<string, string> {
+    if (isSessionExpired.value) {
+      logout()
+      if (typeof window !== 'undefined') window.location.href = '/login'
+      return {}
+    }
     return token.value ? { Authorization: `Bearer ${token.value}` } : {}
   }
 
@@ -37,21 +50,25 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = data.token
     username.value = data.username
     role.value = incomingRole
+    loginAt.value = Date.now()
     localStorage.setItem('admin_token', data.token)
     localStorage.setItem('admin_user', data.username)
     localStorage.setItem('admin_role', incomingRole)
+    localStorage.setItem('admin_login_at', String(loginAt.value))
   }
 
   function logout() {
     token.value = ''
     username.value = ''
     role.value = ''
+    loginAt.value = 0
     localStorage.removeItem('admin_token')
     localStorage.removeItem('admin_user')
     localStorage.removeItem('admin_role')
+    localStorage.removeItem('admin_login_at')
   }
 
-  return { token, username, role, isLoggedIn, authHeaders, login, logout }
+  return { token, username, role, loginAt, isSessionExpired, isLoggedIn, authHeaders, login, logout }
 })
 
 export function resolveMediaUrl(url?: string) {

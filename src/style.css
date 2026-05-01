@@ -85,6 +85,7 @@ html, body, #app { height: 100%; background: var(--bg-base); color: var(--text-p
   flex-shrink: 0;
   border-radius: 12px;
   filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.45)) saturate(1.08);
+  mix-blend-mode: screen;
 }
 
 .sidebar-brand h1 {
@@ -770,6 +771,7 @@ select.form-control {
   object-fit: contain;
   margin: 0 auto 10px;
   filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.35));
+  mix-blend-mode: screen;
 }
 
 .login-logo h2 {

@@ -52,6 +52,14 @@
         </RouterLink>
       </div>
 
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Tài khoản</div>
+        <RouterLink to="/profile" class="nav-item" active-class="active">
+          <span class="nav-icon">🔐</span>
+          Profile
+        </RouterLink>
+      </div>
+
       <div class="sidebar-footer">
         <div class="sidebar-user">
           <div class="avatar">{{ auth.username.charAt(0).toUpperCase() }}</div>
@@ -105,6 +113,7 @@ const titles: Record<string, string> = {
   '/comments': 'Quản lý bình luận',
   '/crawl': 'Crawl phim',
   '/users': 'Người dùng',
+  '/profile': 'Profile',
 }
 
 const currentPageTitle = computed(() => titles[route.path] || 'Admin')
@@ -131,16 +140,24 @@ async function loadStats() {
 
 let timer: ReturnType<typeof setInterval>
 let statsTimer: ReturnType<typeof setInterval>
+let sessionTimer: ReturnType<typeof setInterval>
 
 onMounted(() => {
   updateTime()
   timer = setInterval(updateTime, 1000)
   loadStats()
   statsTimer = setInterval(loadStats, 15000)
+  sessionTimer = setInterval(() => {
+    if (auth.isSessionExpired) {
+      auth.logout()
+      router.push('/login')
+    }
+  }, 15000)
 })
 
 onUnmounted(() => {
   clearInterval(timer)
   clearInterval(statsTimer)
+  clearInterval(sessionTimer)
 })
 </script>

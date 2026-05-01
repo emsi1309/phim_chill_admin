@@ -9,6 +9,7 @@ import UsersPage from './pages/UsersPage.vue'
 import GenresPage from './pages/GenresPage.vue'
 import ActorsPage from './pages/ActorsPage.vue'
 import CommentsPage from './pages/CommentsPage.vue'
+import ProfilePage from './pages/ProfilePage.vue'
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -29,7 +30,8 @@ export const router = createRouter({
         { path: 'actors', component: ActorsPage },
         { path: 'comments', component: CommentsPage },
         { path: 'crawl', component: CrawlPage },
-        { path: 'users', component: UsersPage }
+        { path: 'users', component: UsersPage },
+        { path: 'profile', component: ProfilePage }
       ]
     }
   ]
