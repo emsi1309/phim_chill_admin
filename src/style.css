@@ -5,14 +5,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg-base:       #0d0f14;
-  --bg-sidebar:    #111318;
-  --bg-card:       #161921;
-  --bg-input:      #1c1f28;
-  --bg-hover:      #1f2230;
-  --bg-table-alt:  #13151c;
+  /* Gần RoPhim: nền chính sáng hơn, sidebar/nav đậm vừa */
+  --bg-base:       #1a1d29;
+  --bg-sidebar:    #12151e;
+  --bg-card:       #24283b;
+  --bg-input:      #2a3148;
+  --bg-hover:      #2f3750;
+  --bg-table-alt:  #1e2233;
 
-  --border:        #2a2d3a;
+  --border:        #353b52;
   --border-focus:  #4f6ef7;
 
   --accent:        #4f6ef7;
@@ -634,7 +635,7 @@ select.form-control {
 
 /* ============ LOG TERMINAL ============ */
 .log-terminal {
-  background: #0a0c10;
+  background: var(--bg-table-alt);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 14px 16px;
